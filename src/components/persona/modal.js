@@ -1,44 +1,102 @@
 import React from "react";
-import { Button, Modal, Form } from 'react-bootstrap';
+import { Button, Modal } from "react-bootstrap";
 
-export const ModalPersona = ({ 
-  show, handleClose, showData, postPersona,
-  handleChangeName,inputName, 
-  inputLastname, handleChangeLastname,
-  inputHobby,  handleChangeHobby }) => {
+import { Formik, Form, Field, ErrorMessage } from "formik";
+
+export const ModalPersona = ({
+  show,
+  handleClose,
+  isAdd,
+  postPersona,
+  putPersona,
+  handleChangeName,
+  inputName,
+  inputLastname,
+  handleChangeLastname,
+  inputHobby,
+  handleChangeHobby,
+}) => {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>Registro de persona</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form>
-          <Form.Group className="mb-3" controlId="nombr">
-            <Form.Label>Nombre</Form.Label>
-            <Form.Control onChange={handleChangeName} value={inputName} type="text" placeholder="Ingrese su nombre" />
-          </Form.Group>
+        <Formik
+          initialValues={
+            isAdd
+              ? {
+                  name: "",
+                  lastName: "",
+                  hobby: "",
+                }
+              : { name: inputName, lastName: inputLastname, hobby: inputHobby }
+          }
+          onSubmit={(values) => {
+            isAdd ? postPersona(values) : putPersona(values);
+          }}
+          validate={(values) => {
+            let errors = {};
 
-          <Form.Group className="mb-3" controlId="formBasicApellido">
-            <Form.Label>Apellido</Form.Label>
-            <Form.Control onChange={handleChangeLastname} value={inputLastname} type="text" placeholder="Ingrese su apellido" />
-          </Form.Group>
+            if (values.name === "")
+              errors.name = "Ingrese el nombre del usuario";
+            if (values.lastName === "")
+              errors.lastName = "Ingrese el apellido del usuario";
+            if (values.hobby === "")
+              errors.hobby = "Ingrese el pasatiempo del usuario";
 
-          <Form.Group className="mb-3" controlId="formBasicPasatiempo">
-            <Form.Label>Pasatiempo</Form.Label>
-            <Form.Control onChange={handleChangeHobby} value={inputHobby} type="text" placeholder="Ingrese su pasatiempo" />
-          </Form.Group>
-          
-          
-        </Form>
+            return errors;
+          }}
+        >
+          {() => (
+            <Form id="formUsuario">
+              <div className="row mb-3 px-3">
+                <label htmlFor="inputNombre" className="form-label">
+                  Nombre
+                </label>
+                <Field className="form-control" id="inputNombre" name="name" />
+                <ErrorMessage name="name">
+                  {(error) => <p className="text-danger">{error}</p>}
+                </ErrorMessage>
+              </div>
+
+              <div className="row mb-3 px-3">
+                <label htmlFor="inputLastname" className="form-label">
+                  Apellido
+                </label>
+                <Field
+                  className="form-control"
+                  id="inputLastname"
+                  name="lastName"
+                />
+                <ErrorMessage name="lastName">
+                  {(error) => <p className="text-danger">{error}</p>}
+                </ErrorMessage>
+              </div>
+
+              <div className="row mb-3 px-3">
+                <label htmlFor="inputHobby" className="form-label">
+                  Pasatiempo
+                </label>
+                <Field className="form-control" id="inputHobby" name="hobby" />
+                <ErrorMessage name="hobby">
+                  {(error) => <p className="text-danger">{error}</p>}
+                </ErrorMessage>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Cerrar
         </Button>
-        <Button variant="primary" onClick={postPersona}>
-          Guardar
-        </Button>
+        <div className="ms-auto">
+          <Button variant="primary" type="submit" form="formUsuario">
+            {isAdd ? "Añadir" : "Editar"}
+          </Button>
+        </div>
       </Modal.Footer>
     </Modal>
   );
-}
+};

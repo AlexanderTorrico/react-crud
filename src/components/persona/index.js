@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Container, Button } from 'react-bootstrap';
+import { Container, Button } from "react-bootstrap";
 
 import { ModalPersona } from "./modal";
 import { Canvas } from "./offcanvas";
-import { TableData } from "./tableData"
-import { NavbarC } from "./../Navbar"
+import { TableData } from "./tableData";
+import { NavbarC } from "./../Navbar";
 
-
-
-const url = "http://test3.merx.bo/"
+const url = "http://test3.merx.bo/";
 const cod = 77;
 
 export const Persona = () => {
-
   const [list, setList] = useState([]);
   const [persona, setPersona] = useState({});
 
@@ -43,20 +40,19 @@ export const Persona = () => {
     setLastname("");
     setIsAdd(true);
     handleShow();
-  }
-  const handleModalEdit = persona => {
+  };
+  const handleModalEdit = (persona) => {
     setIsAdd(false);
     handleShow();
     setId(persona.id);
     setName(persona.name);
     setLastname(persona.lastName);
     setHobbby(persona.hobby);
-
   };
 
-
   const getPersona = () => {
-    axios.get(url + "?cod=" + cod)
+    axios
+      .get(url + "?cod=" + cod)
       .then(function (response) {
         // handle success
         setList(response.data.data);
@@ -66,18 +62,24 @@ export const Persona = () => {
         console.log(error);
       })
       .then(function () {
-        console.log("Siempre")
+        console.log("Siempre");
       });
-  }
-  const postPersona = () => {
+  };
+  const postPersona = (values) => {
+    console.log(values);
+
     let obj = {
-      name: inputName,
-      lastName: inputLastname,
-      hobby: inputHobby,
+      name: values.name,
+      lastName: values.lastName,
+      hobby: values.hobby,
       other: "",
-      cod: cod
-    }
-    axios.post(url, obj)
+      cod: cod,
+    };
+
+    console.log(obj);
+
+    axios
+      .post(url, obj)
       .then(function (response) {
         // handle success
 
@@ -91,9 +93,9 @@ export const Persona = () => {
         console.log(error);
       })
       .then(function () {
-        console.log("Siempre")
+        console.log("Siempre");
       });
-  }
+  };
   const putPersona = () => {
     let obj = {
       id: id,
@@ -101,9 +103,10 @@ export const Persona = () => {
       lastName: inputLastname,
       hobby: inputHobby,
       other: "",
-      cod: cod
-    }
-    axios.put(url, obj)
+      cod: cod,
+    };
+    axios
+      .put(url, obj)
       .then(function (response) {
         // handle success
 
@@ -118,16 +121,16 @@ export const Persona = () => {
         console.log(error);
       })
       .then(function () {
-        console.log("Siempre")
+        console.log("Siempre");
       });
-  }
-  const deletePersona = idx => {
-    
+  };
+  const deletePersona = (idx) => {
     let obj = {
-      id: idx
-    }
-    
-    axios.delete(url, {data:obj})
+      id: idx,
+    };
+
+    axios
+      .delete(url, { data: obj })
       .then(function (response) {
         // handle success
         console.log(response.data.message);
@@ -142,20 +145,18 @@ export const Persona = () => {
         console.log(error);
       })
       .then(function () {
-        console.log("Siempre")
+        console.log("Siempre");
       });
-  }
-
+  };
 
   return (
     <React.Fragment>
-      <NavbarC/>
-      
+      <NavbarC />
+
       <Container className="mt-5">
         <Button className="mb-3" variant="primary" onClick={handleModalSave}>
           Agregar persona
         </Button>
-
 
         <TableData
           list={list}
@@ -163,23 +164,21 @@ export const Persona = () => {
           deletePersona={deletePersona}
         />
 
-
-        <Canvas
+        <ModalPersona
           isAdd={isAdd}
           postPersona={postPersona}
           putPersona={putPersona}
           show={show}
           handleClose={handleClose}
           showData={showData}
-          inputName={inputName} handleChangeName={handleChangeName}
-          inputLastname={inputLastname} handleChangeLastname={handleChangeLastname}
-          inputHobby={inputHobby} handleChangeHobby={handleChangeHobby}
-
+          inputName={inputName}
+          handleChangeName={handleChangeName}
+          inputLastname={inputLastname}
+          handleChangeLastname={handleChangeLastname}
+          inputHobby={inputHobby}
+          handleChangeHobby={handleChangeHobby}
         />
-
-
       </Container>
     </React.Fragment>
   );
-}
-
+};
