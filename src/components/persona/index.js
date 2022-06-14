@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Button } from "react-bootstrap";
 
+import { ModalDelete } from "./modalDelete";
 import { ModalPersona } from "./modal";
 import { Canvas } from "./offcanvas";
 import { TableData } from "./tableData";
@@ -17,6 +18,7 @@ export const Persona = () => {
   useEffect(() => getPersona(), []);
   //Input add person
 
+  const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
   const [id, setId] = useState("");
   const [inputName, setName] = useState("");
   const [inputLastname, setLastname] = useState("");
@@ -48,6 +50,13 @@ export const Persona = () => {
     setName(persona.name);
     setLastname(persona.lastName);
     setHobbby(persona.hobby);
+  };
+  const handleOpenModalDelete = (persona) => {
+    setId(persona.id);
+    setName(persona.name);
+    setLastname(persona.lastName);
+    setHobbby(persona.hobby);
+    setModalDeleteOpen(true);
   };
 
   const getPersona = () => {
@@ -129,6 +138,8 @@ export const Persona = () => {
       id: idx,
     };
 
+    setModalDeleteOpen(false);
+
     axios
       .delete(url, { data: obj })
       .then(function (response) {
@@ -160,8 +171,10 @@ export const Persona = () => {
 
         <TableData
           list={list}
+          setModalDeleteOpen={setModalDeleteOpen}
           handleModalEdit={handleModalEdit}
           deletePersona={deletePersona}
+          handleOpenModalDelete={handleOpenModalDelete}
         />
 
         <ModalPersona
@@ -177,6 +190,14 @@ export const Persona = () => {
           handleChangeLastname={handleChangeLastname}
           inputHobby={inputHobby}
           handleChangeHobby={handleChangeHobby}
+        />
+
+        <ModalDelete
+          id={id}
+          modalDeleteOpen={modalDeleteOpen}
+          setModalDeleteOpen={setModalDeleteOpen}
+          inputName={inputName}
+          deletePersona={deletePersona}
         />
       </Container>
     </React.Fragment>
