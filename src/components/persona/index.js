@@ -162,7 +162,7 @@ export const Persona = () => {
 
   return (
     <React.Fragment>
-      <NavbarC />
+      {/* <NavbarC /> */}
 
       <Container className="mt-5">
         <Button className="mb-3" variant="primary" onClick={handleModalSave}>
